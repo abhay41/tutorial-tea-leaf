@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea Leaf Disease Detection</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Tea Leaf Disease Prediction</h1>
+        <p>Upload a tea leaf image to Predict the disease.</p>
+        <input type="file" id="imageUpload">
+        <button onclick="uploadImage()">Predict</button>
+        <div class="result" id="result"></div>
+    </div>
+    <footer>
+        <p>Tea Leaf Disease Detection &copy; 2024</p>
+    </footer>
+    <script>
+        function uploadImage() {
+            const fileInput = document.getElementById('imageUpload');
+            const file = fileInput.files[0];
+            if (!file) {
+                alert('Please select an image.');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = `Predicted Class: ${data.predicted_class}<br>Confidence: ${data.confidence.toFixed(2)}%`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
